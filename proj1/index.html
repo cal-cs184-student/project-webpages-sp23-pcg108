@@ -3,5 +3,70 @@
 	</head>
 	<body>
 		<h1>Task 1</h1>
+
+		To rasterize triangles in Task 1, we follow the basic rasterization procedure of sample one point at the center of each pixel. <br><br>
+		First, we determine the bounding box of the triangle by determining the vertices as ranging from the minimum X value of the triangle vertices to the maximum X value, and likewise for the Y values. <br><br>
+		We perform a point in triangle test for each point in this bounding box as the logical AND of 3 line tests corresponding to the 3 sides of the triangle. We perform an additional check to account for different winding orders. <br><br>
+		Finally, if the point is in the triangle, we call the <em>rasterize_point</em> function. <br><br>
+
+		This algorithm is no worse than checking each sample in the bounding box of the triangle since that is exactly what it does. <br> <br>
+
+		<img src="part1_basic4.png" width="536" height="381"> <br>
+
+		<h1>Task 2</h1>
+
+		The supersampling algorithm begins in a similar manner, by looping over each pixel in the bounding box of the triangle. However, within each pixel we then also loop over <em> sample_rate </em> additional points, spaced out evenly within the pixel square. In order to accomodate this, the sample buffer is now expanded to be a factor of <em> sample_rate </em> larger. <br> <br>
+
+		The point in triangle test is now modified to use the <em>sample_rate</em> samples within the pixel, rather than the single sample in the center of the pixel as before. <br> <br>
+
+		After performing the point in triangle test, we perform the appropriate array index logic to find the corresponding sample buffer index for the expanded samples and call <em> fill_pixel </em>. Within <em> fill_pixel </em>, we add a check to fill the supersamples surrounding points and lines to duplicate the pixel value at that point, so that we avoid "diluting" the pixel intensity of points and lines. <br><br>
+
+		We also modify the <em>resolve_to_framebuffer</em> function to use the appropriate index logic to average the supersamples and write the resulting color to the framebuffer. <br><br>
+
+		We can see in the below comparison that increasing the sample rate causes the edges of the objects to more closely approximate a straight line, rather than a jaggy one. This is because supersampling around the edge "fades" out the jaggies as the supersamples are averaged together. <br><br>
+
+		<img src="part1_basic4.png" width="536" height="381"> <img src="part2_basic4_4.png" width="536" height="381">  <img src="part2_basic4_16.png" width="536" height="381"> <br><br>
+
+
+		<h1>Task 3</h1>
+
+		Below is a modified version of cubeman where he is raising the left leg and left arm 45 degrees in the air. <br><br>
+		<img src="part3.png" width="387" height="293.5"> <br>
+
+		<h1>Task 4</h1>
+
+		Barycentric coordinates are a coordinate system for triangles that allow you to express a point within the triangle as a linar combination of the vertices of the triangle. Below is an image in which the color of the triangle vertices are specified and the inside of the triangle is interpolated using barycentric coordinates. <br><br>
+
+		<img src="part4_blend.png" width="392" height="297"> <br><br>
+
+		Below is an image of <em>svg/basic/test7.svg</em>: <br><br>
+
+		<img src="part4_basic7.png" width="388" height="296.5"> <br><br>
+
+
+		<h1>Task 5</h1>
+
+		Pixel sampling using a full-resolution texture map involves mapping each sample point within each triangle to its corresponding <em>uv</em> sample point in the tecture map. Given the 3 <em> xy </em> coordinates for the triangle vertices and the corresponding <em> uv </em> coordinates, we first use barycentric coordinates to interpolate the <em> uv </em> coordinates for the sample/supersample in the texture map. <br><br>
+
+		If we use nearest pixel sampling, the color used for the pixel is that of the nearest point in the texture map. This can be found by taking the 4 nearest sample locations in the texture map, picking the closest one, and using that color as the color of the <em>xy</em> sample. If we use bilinear pixel sampling, the color used is effectively a weighted average of the colors of the surrounding 4 texture samples, using the bilinear interpolation method. <br><br>
+
+		<img src="part5_nearest1.png" width="392" height="297"> <img src="part5_nearest16.png" width="392" height="297"> <img src="part5_bilinear1.png" width="392" height="297"> <img src="part5_bilinear16.png" width="392" height="297"> <br><br>
+
+		Based on the images above (nearest-1 sample, nearest-16 samples, bilinear-1 sample, bilinear-16 samples), we can see that the bilinear interpolation offers a smoother transition between image objects. Bilinear interpolation in general offers an advantage over nearest-neighbor sampling where the data is continuous, rather than inherently discrete. <br><br>
+
+
+		<h1>Task 6</h1>
+
+		In level sampling, in addition to having a full resolution texture, we also have a series of smaller resolution textures (each downsampled by a factor of 2) as part of the texture package. Samples closer to the viewer can use higher-resolution mipmap levels, while those "further away" can use lower-resolution levels to increase speed of the rendering process. Similar to pixel sampling, we use barycentric coordinates to interpolate the <em> uv </em> coordinates for the sample in the texture map. We also find the <em>uv</em> coordinates for the point at x+1 and the point at y+1. <br><br>
+
+		We use these 3 samples to find the appropriate mipmap level (which may include a fractional component). We can use the nearest real mipmap level to retrieve the texel for that sample. Alternatively, we can compute the mipmap level as a continuous function and interpolate between the texels of the adjacent levels to retrieve the texel. <br><br>
+
+		To prioritize speed, nearest pixel sampling and 1 sample per pixel would be ideal. To optimize for memory, nearest level sampling with 1 sample per pixel would be ideal. To optimize for antialiasing power, bilinear pixel sampling with greater samples per pixel would be ideal. We can toggle between the different intermediate options to find the best solution that balances all 3 of these considerations. <br><br>
+
+		Below are 4 examples: L_ZERO and P_NEAREST, L_ZERO and P_LINEAR, L_NEAREST and P_NEAREST, L_NEAREST and P_LINEAR <br><br> 
+
+		<img src="part6_l0_plinear.png" width="392" height="297"> <img src="part6_l0_pnearest.png" width="392" height="297"> <img src="part6_lnearest_pnearest.png" width="392" height="297"> <img src="part6_lnearest_plinear.png" width="392" height="297"> <br><br>
+	
+		PROJECT WEBPAGE: https://cal-cs184-student.github.io/project-webpages-sp23-pcg108/proj1/index.html
 	</body>
 </html>
