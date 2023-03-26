@@ -1,7 +1,174 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 3-2 here
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>  
+    div.padded {  
+      padding-top: 0px;  
+      padding-right: 100px;  
+      padding-bottom: 0.25in;  
+      padding-left: 100px;  
+    }  
+  </style> 
+<title>Prashanth Ganesh  |  CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+<br />
+<h1 align="middle">Assignment 3-2: Additional Features to PathTracer</h1>
+    <h2 align="middle">Prashanth Ganesh</h2>
+    <h2 align="middle">Website URL: <a href="https://cal-cs184-student.github.io/project-webpages-sp23-pcg108/proj3-2/index.html">here</a></h2>
+
+    <div class="padded">
+
+        
+        * NOTE: For this project, you will choose TWO out of the four given parts to complete. One of those parts must be Part 1 or Part 2. In other words, you can choose any combination of two parts except the pair (Part 3, Part 4).
+
+
+        <h3 align="middle">Part 1. Mirror and Glass Materials</h3>
+
+        <p><b>
+            Show a sequence of six images of scene `CBspheres.dae` rendered with `max_ray_depth` set to 0, 1, 2, 3, 4, 5, and 100. The other settings should be at least 64 samples per pixel and 4 samples per light. Make sure to include all screenshots.
+        </b></p>
+        <p>
+            <div align="middle">
+              <table style="width:100%">
+                <tr align="center">
+                  <td>
+                    <img src="part1/spheres_m0.png" align="middle" width="400px"/>
+                    <figcaption>Max Ray Depth: 0</figcaption>
+                  </td>
+                  <td>
+                    <img src="part1/spheres_m1.png" align="middle" width="400px"/>
+                    <figcaption>Max Ray Depth: 1</figcaption>
+                  </td>
+                  <td>
+                    <img src="part1/spheres_m2.png" align="middle" width="400px"/>
+                    <figcaption>Max Ray Depth: 2</figcaption>
+                  </td>
+                </tr>
+                <tr align="center">
+                  <td>
+                    <img src="part1/spheres_m3.png" align="middle" width="400px"/>
+                    <figcaption>Max Ray Depth: 3</figcaption>
+                  </td>
+                  <td>
+                    <img src="part1/spheres_m4.png" align="middle" width="400px"/>
+                    <figcaption>Max Ray Depth: 4</figcaption>
+                  </td>
+                  <td>
+                    <img src="part1/spheres_m5.png" align="middle" width="400px"/>
+                    <figcaption>Max Ray Depth: 5</figcaption>
+                  </td>
+                </tr>
+                <tr align="center">
+                  <td>
+                    <img src="part1/spheres_m100.png" align="middle" width="400px"/>
+                    <figcaption>Max Ray Depth: 100</figcaption>
+                  </td>
+                </tr>
+              </table>
+            </div>
+        </p>
+        <br>
+        <p><b>
+            Point out the new multibounce effects that appear in each image. 
+        </b></p>
+        <p>
+            In this scene, we see that there is a sphere that acts like a mirror (relfects light) and another sphere that primarily refracts light. When the max ray depth is 0, as expected the only illumination we get is internal, so only the light source is seen. When it is 1, the reflective sphere only reflects the direct lighting, while the refractive sphere refracts only the small patch where the direct light hits. At 2 we start to see some more interesting features. The mirror sphere gets the rays that bounce off the walls and the other sphere, while the "glass" sphere is starting to show some more refracted light. As we increase the ray depth to 3, 4, 5, and 100, the images reflected/refracted in the spheres become increasingly clear and the scene becomes brighter (note that the difference as we increase the ray depth becomes less noticable since the likelihood that a ray would bounce that much decreases significantly).
+        </p>
+        <br>
+        <p><b>
+            Explain how these bounce numbers relate to the particular effects that appear. Make sure to include all screenshots.
+        </b></p>
+        <p>
+            We can see that for 0 bounce, we don't see any reflection or refraction as only internal lighting is seen. At 1 bounce, the only reflection is at the very top of the left sphere as that is what recieves direct lighting from the light source, and we only see a small patch of refraction at the top of the right sphere from the direct lighting. At 2 bounces we see more effects such as the light from the walls and the other spheres interacting with each other, since to see reflection from other objects we need a minimum of 2 bounces (light source -> object -> reflective/refractive surface). As we increase the number of bounces, we see more and more detail appear in the spheres. 
+        </p>
+        <br>
+
+
+        <h3 align="middle">Part 2. Microfacet Material</h3>
+        <p><b>
+            Show a screenshot sequence of 4 images of scene `CBdragon_microfacet_au.dae` rendered with $\alpha$ set to 0.005, 0.05, 0.25 and 0.5. The other settings should be at least 128 samples per pixel and 1 samples per light. The number of bounces should be at least 5. Describe the differences between different images. Note that, to change the $\alpha$, just open the .dae file and search for `microfacet`.
+        </b></p>
+        <p>
+             <div align="middle">
+              <table style="width:100%">
+                <tr align="center">
+                  <td>
+                    <img src="part2/dragon_a005.png" align="middle" width="400px"/>
+                    <figcaption>alpha: 0.005</figcaption>
+                  </td>
+                  <td>
+                    <img src="part2/dragon_a05.png" align="middle" width="400px"/>
+                    <figcaption>alpha: 0.05</figcaption>
+                  </td>
+                </tr>
+                <tr align="center">
+                  <td>
+                    <img src="part2/dragon_a25.png" align="middle" width="400px"/>
+                    <figcaption>alpha: 0.25</figcaption>
+                  </td>
+                  <td>
+                    <img src="part2/dragon_a5.png" align="middle" width="400px"/>
+                    <figcaption>alpha: 0.5</figcaption>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            We can see through the 4 images that as we increase alpha (a parameter which represents the roughness of the material), the image becomes less glossy and more matte. We can also see that there is less specularity as alpha is increased.
+        </p>
+        <br>
+        <p><b>
+            Show two images of scene `CBbunny_microfacet_cu.dae` rendered using cosine hemisphere sampling (default) and your importance sampling. The sampling rate should be fixed at 64 samples per pixel and 1 samples per light. The number of bounces should be at least 5. Briefly discuss their difference.
+        </b></p>
+        <p>
+            <div align="middle">
+              <table style="width:100%">
+                <tr align="center">
+                  <td>
+                    <img src="part2/bunny_hemisphere.png" align="middle" width="400px"/>
+                    <figcaption>Cosine Hemisphere Sampling</figcaption>
+                  </td>
+                  <td>
+                    <img src="part2/bunny_importance.png" align="middle" width="400px"/>
+                    <figcaption>Importance Sampling</figcaption>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            We can see that using cosine hemisphere sampling, the scene is much more noisy (for a fixed number of samples per pixel). This is expected since the samples are not drawn from the light source as they are in importance sampling. To increase the quality, we would have to increase the number of samples with cosine hemisphere, but as we can see we don't need to do so with importance sampling to achieve the same result.
+        </p>
+        <br>
+        <p><b>
+            Show at least one image with some other conductor material, replacing `eta` and `k`. Note that you should look up values for real data rather than modifying them arbitrarily. Tell us what kind of material your parameters correspond to. 
+        </b></p>
+        <p>
+            <div align="middle">
+              <table style="width:100%">
+                <tr align="center">
+                  <td>
+                    <img src="part2/dragon_al_ag.png" align="middle" width="400px"/>
+                    <figcaption>Material: aluminum</figcaption>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            This dragon is rendered with the material properties of aluminum. The corresponding eta values are: [1.3352 1.0109 0.68955] and the k values are [7.3398 6.6157 5.6471]. 
+        </p>
+        <br>
+        
+        
+        
+
+
+
+
+
+    </div>
+</body>
 </html>
+
